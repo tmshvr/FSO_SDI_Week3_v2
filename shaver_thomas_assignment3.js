@@ -5,7 +5,9 @@
 // Project 3
 // Storytelling; using JSON.
 
-var jsonText = { // --- Level 1: object ---
+// --- Global vars ? ---
+var teri = null,
+jsonText = { // --- Level 1: object ---
     "menu": [ // --- Level 2: array ---
         { "food": "hamburgers", "have": false, "from": "Mike" }, // --- Level 3: object & Level 4: data ---
         { "food": "hotdogs", "have": false, "from": "Bobbi" },
@@ -25,9 +27,9 @@ var jsonText = { // --- Level 1: object ---
         "Rose, Verna, Joe, Josh"
     ],
     "total": 21
-};
+},
 
-var Coordinator = function( jsonObj ) { // --- Object argument ---
+Coordinator = function( jsonObj ) { // --- Object argument ---
     var menu = jsonObj.menu, // --- Property object ---
         guestList = jsonObj.list, // --- Property array ---
         totalGuests = jsonObj.total, // --- Property number ---
@@ -36,7 +38,7 @@ var Coordinator = function( jsonObj ) { // --- Object argument ---
         arrived = [],
         groupIterator = 0,
 
-        getGroupAnnouncement = function( names ) {
+        getGroupAnnouncement = function( names ) { // --- String arg & Method Function ---
             // --- Mutator --- (Big one? Modifies arrived array.)
             var stringGroup = "", // for the else, and because Komodo calls this an anonymous function that doesn't always return a value, otherwise.
                 group = names.split( ", " );
@@ -92,18 +94,30 @@ var Coordinator = function( jsonObj ) { // --- Object argument ---
         getGuestsLeft = function( alreadyHere ) {
             return( totalGuests - alreadyHere );
         },
-        timePasses = function() {
-            while( getGuestsLeft( arrived.length ) !== 0 ) {
-                whoArrived();
-                whatArrived();
+        getReady = function() { // --- Accessor (getter) ---
+            return ready;
+        },
+        setReady = function( boolVal ) { // --- Boolean argument & Mutator (setter) ---
+            if( boolVal === true || boolVal === false ) { // --- Logical OR ---
+                ready = boolVal;
+            };
+        },
+        timePasses = function( readyOrNot ) {
+            whoArrived();
+            whatArrived();
+            if( arrived.length - 1 === totalGuests ) {
+                setReady( true );
+            };
+        },
+        throwParty = function() {
+            while( arrived.length < totalGuests ) {
+                 timePasses( getReady());
             };
         };
     return {
-        "timePasses": timePasses
+        "throwParty": throwParty
     };
 };
 
-var Teri = new Coordinator( jsonText );
-/**/
-Teri.timePasses();
-/**/
+teri = new Coordinator( jsonText );
+teri.throwParty();
