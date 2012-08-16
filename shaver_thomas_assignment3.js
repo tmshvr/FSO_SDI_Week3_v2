@@ -4,9 +4,10 @@
 // SDI 1208
 // Project 3
 // Storytelling; using JSON.
-var jsonText = {
-    "menu": [
-        { "food": "hamburgers", "have": false, "from": "Mike" },
+
+var jsonText = { // --- Level 1: object ---
+    "menu": [ // --- Level 2: array ---
+        { "food": "hamburgers", "have": false, "from": "Mike" }, // --- Level 3: object & Level 4: data ---
         { "food": "hotdogs", "have": false, "from": "Bobbi" },
         { "food": "potatoes", "have": false, "from": "Colleen" },
         { "food": "hotdish", "have": false, "from": "Amanda" },
@@ -26,20 +27,17 @@ var jsonText = {
     "total": 21
 };
 
-var Coordinator = function( jsonObj ) {
-    var menu = jsonObj.menu,
-        guestList = ( jsonObj.list ),
-        totalGuests = jsonObj.total,
+var Coordinator = function( jsonObj ) { // --- Object argument ---
+    var menu = jsonObj.menu, // --- Property object ---
+        guestList = jsonObj.list, // --- Property array ---
+        totalGuests = jsonObj.total, // --- Property number ---
+        ready = false, // --- Property boolean ---
+        tell = "Not yet, still people coming.", // --- Property string ---
         arrived = [],
         groupIterator = 0,
 
-        whoArrived = function() {
-            var arrival = getGroupAnnouncement( guestList[ groupIterator ]);
-            console.log( arrival );
-            groupIterator++;
-        },
         getGroupAnnouncement = function( names ) {
-            // --- Mutator --- (big one ?)
+            // --- Mutator --- (Big one? Modifies arrived array.)
             var stringGroup = "", // for the else, and because Komodo calls this an anonymous function that doesn't always return a value, otherwise.
                 group = names.split( ", " );
                 announcement = " just got here.";
@@ -54,7 +52,7 @@ var Coordinator = function( jsonObj ) {
                 return( group[ 0 ] + " and " + group[ 1 ] + announcement );
             }
             else { // Three or more people in the group.
-                for( var n = 0; n < group.length; n++ ) { // for loop
+                for( var n = 0; n < group.length; n++ ) { // --- For loop ---
                     // --- Nested Conditionals ---
                     if( n < ( group.length - 2 )) { // If it not the last person ", " concatenate them on.
                         stringGroup += group[ n ] + ", ";
@@ -68,33 +66,37 @@ var Coordinator = function( jsonObj ) {
                     arrived.push( group[ n ]);
                 };
             };
-            return stringGroup + announcement; // --- Return String ---
+            return stringGroup + announcement; // --- Return string ---
         },
-        whatArrived = function() { // --- Method Procedure ---
+        whoArrived = function() {
+            var arrival = getGroupAnnouncement( guestList[ groupIterator ]);
+            console.log( arrival );
+            groupIterator++;
+        },
+        whatArrived = function() { // --- Method procedure ---
             var foodArrived = "";
             for( var k = 0; k < menu.length; k++ ) {
                 for( var j = 0; j < arrived.length; j++ ) {
-                    if( menu[ k ].from === arrived[ j ] && menu[ k ].have === false ) {
-                        menu[ k ].have = true;
-                        foodArrived = "\t\t" + arrived[ j ] + " brought the " + menu[ k ].food + ".\n";
+                    if( menu[ k ].from === arrived[ j ]) {
+                        if( menu[ k ].have === false ) { // --- Nested conditional ---
+                            menu[ k ].have = true;
+                            foodArrived = "\t\t" + arrived[ j ] + " brought the " + menu[ k ].food + ".\n";
+                        };
                     };
                 };
             };
             if( foodArrived != "" ) {
                 console.log( foodArrived );
             };
-        },
+        }, // --- Back ---
         getGuestsLeft = function( alreadyHere ) {
             return( totalGuests - alreadyHere );
         },
         timePasses = function() {
-            whoArrived();
-            whatArrived();
-/*
-            if( getGuestsLeft( arrived.length ) === 0 ) {
+            while( getGuestsLeft( arrived.length ) !== 0 ) {
+                whoArrived();
                 whatArrived();
             };
-*/
         };
     return {
         "timePasses": timePasses
@@ -103,12 +105,5 @@ var Coordinator = function( jsonObj ) {
 
 var Teri = new Coordinator( jsonText );
 /**/
-Teri.timePasses();
-Teri.timePasses();
-Teri.timePasses();
-Teri.timePasses();
-Teri.timePasses();
-Teri.timePasses();
-Teri.timePasses();
 Teri.timePasses();
 /**/
