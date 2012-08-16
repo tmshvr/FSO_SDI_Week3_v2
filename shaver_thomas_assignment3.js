@@ -5,6 +5,14 @@
 // Project 3
 // Storytelling; using JSON.
 var jsonText = {
+    "menu": [
+        { "food": "hamburgers", "have": false, "from": "Mike" },
+        { "food": "hotdogs", "have": false, "from": "Bobbi" },
+        { "food": "potatoes", "have": false, "from": "Colleen" },
+        { "food": "hotdish", "have": false, "from": "Amanda" },
+        { "food": "pop", "have": false, "from": "Kelly" },
+        { "food": "dessert", "have": false, "from": "Rose" }
+    ],
     "list": [
         "Mike, Nevada, Johnny",
         "Bobbi, Sage, Madi",
@@ -15,19 +23,13 @@ var jsonText = {
         "Matt, Jesse",
         "Rose, Verna, Joe, Josh"
     ],
-    "menu": [
-        { "food": "hamburgers", "have": true, "from": "Mike" },
-        { "food": "hotdogs", "have": true, "from": "Bobbi" },
-        { "food": "potatoes", "have": false, "from": "Colleen" },
-        { "food": "hotdish", "have": false, "from": "Amanda" },
-        { "food": "pop", "have": false, "from": "Kelly" },
-        { "food": "dessert", "have": false, "from": "Rose" }
-    ],
-    "totalGuests": 21
+    "total": 21
 };
 
 var Coordinator = function( jsonObj ) {
-    var guestList = ( jsonObj.list ),
+    var menu = jsonObj.menu,
+        guestList = ( jsonObj.list ),
+        totalGuests = jsonObj.total,
         arrived = [],
         groupIterator = 0,
 
@@ -38,8 +40,9 @@ var Coordinator = function( jsonObj ) {
         },
         getGroupAnnouncement = function( names ) {
             // --- Mutator --- (big one ?)
-            var group = names.split( ", " );
-            announcement = " just got here.";
+            var stringGroup = "", // for the else, and because Komodo calls this an anonymous function that doesn't always return a value, otherwise.
+                group = names.split( ", " );
+                announcement = " just got here.";
 
             if( group.length === 1 ) { // One person.
                 arrived.push( group[ 0 ]);
@@ -51,7 +54,6 @@ var Coordinator = function( jsonObj ) {
                 return( group[ 0 ] + " and " + group[ 1 ] + announcement );
             }
             else { // Three or more people in the group.
-                var stringGroup = "";
                 for( var n = 0; n < group.length; n++ ) { // for loop
                     // --- Nested Conditionals ---
                     if( n < ( group.length - 2 )) { // If it not the last person ", " concatenate them on.
@@ -65,22 +67,39 @@ var Coordinator = function( jsonObj ) {
                     };
                     arrived.push( group[ n ]);
                 };
-                return stringGroup + announcement; // --- Return String ---
+            };
+            return stringGroup + announcement; // --- Return String ---
+        },
+        whatArrived = function() { // --- Method Procedure ---
+            var foodArrived = "";
+            for( var k = 0; k < menu.length; k++ ) {
+                for( var j = 0; j < arrived.length; j++ ) {
+                    if( menu[ k ].from === arrived[ j ] && menu[ k ].have === false ) {
+                        menu[ k ].have = true;
+                        foodArrived = "\t\t" + arrived[ j ] + " brought the " + menu[ k ].food + ".\n";
+                    };
+                };
+            };
+            if( foodArrived != "" ) {
+                console.log( foodArrived );
             };
         },
-        timePasses = function() { // --- Method Function ? ---
+        getGuestsLeft = function( alreadyHere ) {
+            return( totalGuests - alreadyHere );
+        },
+        timePasses = function() {
             whoArrived();
-        }
+            whatArrived();
+/*
+            if( getGuestsLeft( arrived.length ) === 0 ) {
+                whatArrived();
+            };
+*/
+        };
     return {
         "timePasses": timePasses
     };
 };
-
-/*
-jsonObj.menu[ 0 ].hamburgers
-jsonObj.menu[ 0 ].from
-jsonObj.totalGuests
-*/
 
 var Teri = new Coordinator( jsonText );
 /**/
