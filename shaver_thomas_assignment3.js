@@ -16,18 +16,18 @@ var jsonText = {
         "Rose, Verna, Joe, Josh"
     ],
     "menu": [
-        { "hamburgers": true, "from": "Mike" },
-        { "hotdogs": true, "from": "Bobbi" },
-        { "potatoes": false, "from": "Colleen" },
-        { "hotdish": false, "from": "Amanda" },
-        { "pop": false, "from": "Kelly" },
-        { "dessert": false, "from": "Rose" }
+        { "food": "hamburgers", "have": true, "from": "Mike" },
+        { "food": "hotdogs", "have": true, "from": "Bobbi" },
+        { "food": "potatoes", "have": false, "from": "Colleen" },
+        { "food": "hotdish", "have": false, "from": "Amanda" },
+        { "food": "pop", "have": false, "from": "Kelly" },
+        { "food": "dessert", "have": false, "from": "Rose" }
     ],
     "totalGuests": 21
 };
 
-var Coordinator = function( list ) {
-    var guestList = list,
+var Coordinator = function( jsonObj ) {
+    var guestList = ( jsonObj.list ),
         arrived = [],
         groupIterator = 0,
 
@@ -70,15 +70,19 @@ var Coordinator = function( list ) {
         },
         timePasses = function() { // --- Method Function ? ---
             whoArrived();
-        };
+        }
     return {
         "timePasses": timePasses
     };
 };
 
-var jsonArg = JSON.stringify( jsonText );
-console.log( JSON.parse( jsonArg ));
-var Teri = new Coordinator( JSON.parse( jsonArg ).list );
+/*
+jsonObj.menu[ 0 ].hamburgers
+jsonObj.menu[ 0 ].from
+jsonObj.totalGuests
+*/
+
+var Teri = new Coordinator( jsonText );
 /**/
 Teri.timePasses();
 Teri.timePasses();
