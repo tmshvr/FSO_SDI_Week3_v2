@@ -103,9 +103,7 @@ Coordinator = function( jsonArray ) { // --- Array argument ---
             destroyed += down;
         },
         timePasses = function( readyOrNot ) {
-            var arrival = getGroupAnnouncement( guestList[ groupIterator ]),
-                food = null
-            ;
+            var arrival = getGroupAnnouncement( guestList[ groupIterator ]), food = null;
                 announce( arrival );
                 groupIterator++;
                 food = whatArrived();
